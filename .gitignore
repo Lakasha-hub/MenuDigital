@@ -4,7 +4,7 @@
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
 # Custom files
-appsettings.Development.json
+/MenuDigital/appsettings.Development.json
 
 # User-specific files
 *.rsuser
