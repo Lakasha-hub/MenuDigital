@@ -1,15 +1,14 @@
+using Aplication.Interfaces.Command;
+using Aplication.Interfaces.Querys;
+using Aplication.Interfaces.Services;
+using Aplication.Services;
+using Infraestructure.Command;
 using Infraestructure.Persistence;
+using Infraestructure.Querys;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Configure appsettings and secrets
-builder.Configuration
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
-    .AddUserSecrets<Program>(optional: true)
-    .AddEnvironmentVariables();
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -20,9 +19,29 @@ builder.Services.AddSwaggerGen();
 // Database Injection
 var connectionString = builder.Configuration["ConnectionString"];
 builder.Services.AddDbContext<MenuDigitalContext>(options =>
-    // Agregar cadena de conexión en appsettings.json
     options.UseNpgsql(connectionString)
 );
+
+// Add Custom Services
+builder.Services.AddScoped<IDishService, DishService>();
+
+// CQRS Injection
+builder.Services.AddScoped<IDishQuery, DishQuery>();
+builder.Services.AddScoped<IDishCommand, DishCommand>();
+builder.Services.AddScoped<ICategoryQuery, CategoryQuery>();
+
+// Error Response Configuration
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var errorMessage = context.ModelState.Values
+            .SelectMany(v => v.Errors)
+            .Select(e => e.ErrorMessage)
+            .FirstOrDefault();
+        return new BadRequestObjectResult(new { Message = errorMessage });
+    };
+});
 
 var app = builder.Build();
 
