@@ -19,6 +19,10 @@ namespace Infraestructure.Persistence
         public DbSet<DeliveryType> DeliveryType { get; set; }
         public DbSet<Status> Status { get; set; }
 
+        public MenuDigitalContext(DbContextOptions<MenuDigitalContext> options) : base(options)
+        {
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new DishConfiguration());
