@@ -22,11 +22,13 @@ namespace Infraestructure.Persistence.builderConfiguration
             builder.Property(d => d.Price).IsRequired().HasColumnType("decimal(18,2)");
             builder.Property(d => d.ImageUrl).IsRequired().HasColumnType("text");
             builder.Property(d => d.CreateDate)
-                .HasColumnType("timestamp")
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                .HasColumnType("timestamp without time zone")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .IsRequired();
             builder.Property(d => d.UpdateDate)
-                .HasColumnType("timestamp")
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                .HasColumnType("timestamp without time zone")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .IsRequired();
 
             builder.HasOne<Category>(d => d.CategoryDb)
                   .WithMany(c => c.Dishes)

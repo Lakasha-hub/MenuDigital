@@ -20,8 +20,9 @@ namespace Infraestructure.Persistence.EntityConfiguration
             builder.Property(oi => oi.Quantity).IsRequired();
             builder.Property(oi => oi.Notes).HasColumnType("text");
             builder.Property(oi => oi.CreateDate)
-                  .HasColumnType("timestamp")
-                  .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                  .HasColumnType("timestamp without time zone")
+                  .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                  .IsRequired();
 
             builder.HasOne<Dish>(oi => oi.DishDb)
                     .WithMany(d => d.OrderItems)

@@ -21,11 +21,13 @@ namespace Infraestructure.Persistence.EntityConfiguration
             builder.Property(o => o.Notes).HasColumnType("text");
             builder.Property(o => o.Price).IsRequired().HasColumnType("decimal(18,2)");
             builder.Property(o => o.CreateDate)
-                  .HasColumnType("timestamp")
-                  .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                  .HasColumnType("timestamp without time zone")
+                  .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                  .IsRequired();
             builder.Property(o => o.UpdateDate)
-                    .HasColumnType("timestamp")
-                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                    .HasColumnType("timestamp without time zone")
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                    .IsRequired();
 
             builder.HasMany<OrderItem>(o => o.OrderItems)
                   .WithOne(oi => oi.OrderDb)
