@@ -15,7 +15,7 @@ namespace MenuDigital.Controllers
             _service = service;
         }
 
-        [HttpOptions]
+        [HttpGet]
         [ProducesResponseType(typeof(List<CategoryResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiError), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAll()
