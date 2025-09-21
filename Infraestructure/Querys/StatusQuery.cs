@@ -9,23 +9,18 @@ using System.Threading.Tasks;
 
 namespace Infraestructure.Querys
 {
-    public class CategoryQuery : ICategoryQuery
+    public class StatusQuery : IStatusQuery
     {
         private readonly MenuDigitalContext _context;
 
-        public CategoryQuery(MenuDigitalContext context)
+        public StatusQuery(MenuDigitalContext context)
         {
             _context = context;
         }
 
-        public IEnumerable<Category> GetAllCategories()
+        public IEnumerable<Status> GetAllStatus()
         {
-            return _context.Category.ToList();
-        }
-
-        public Category GetCategoryById(int id)
-        {
-            return _context.Category.FirstOrDefault(c => c.Id == id);
+            return _context.Status.ToList();
         }
     }
 }

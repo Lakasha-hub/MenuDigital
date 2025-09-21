@@ -1,4 +1,8 @@
-﻿using Aplication.Interfaces.Querys;
+﻿using Aplication.DTOs.Category;
+using Aplication.DTOs.Dish;
+using Aplication.Exceptions;
+using Aplication.Interfaces.Querys;
+using Aplication.Interfaces.Services;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -8,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Aplication.Services
 {
-    public class CategoryService
+    public class CategoryService : ICategoryService
     {
         private readonly ICategoryQuery _query;
 
@@ -17,15 +21,17 @@ namespace Aplication.Services
             _query = query;
         }
 
-        public Category GetById(int id)
+        public async Task<List<CategoryResponse>> GetAll()
         {
-            var category = _query.GetCategoryById(id);
-            if(category == null)
+            var categories = _query.GetAllCategories();
+            var result = categories.Select(c => new CategoryResponse
             {
-                throw new Exception("Category not found");
-            }
-            return category;
+                Id = c.Id,
+                Name = c.Name,
+                Description = c.Description,
+                Order = c.Order
+            }).ToList();
+            return result;
         }
-
     }
 }

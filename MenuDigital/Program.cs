@@ -24,11 +24,16 @@ builder.Services.AddDbContext<MenuDigitalContext>(options =>
 
 // Add Custom Services
 builder.Services.AddScoped<IDishService, DishService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IStatusService, StatusService>();
+builder.Services.AddScoped<IDeliveryTypeService, DeliveryTypeService>();
 
 // CQRS Injection
 builder.Services.AddScoped<IDishQuery, DishQuery>();
 builder.Services.AddScoped<IDishCommand, DishCommand>();
 builder.Services.AddScoped<ICategoryQuery, CategoryQuery>();
+builder.Services.AddScoped<IStatusQuery, StatusQuery>();
+builder.Services.AddScoped<IDeliveryTypeQuery, DeliveryTypeQuery>();
 
 // Error Response Configuration
 builder.Services.Configure<ApiBehaviorOptions>(options =>

@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace Aplication.Interfaces.Querys
 {
-    public interface ICategoryQuery
+    public interface IDeliveryTypeQuery
     {
-        IEnumerable<Category> GetAllCategories();
-        Category GetCategoryById(int id);
+        IEnumerable<DeliveryType> GetAllDeliveryTypes();
     }
 }

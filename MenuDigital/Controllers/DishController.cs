@@ -39,6 +39,33 @@ namespace MenuDigital.Controllers
             }
         }
 
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(DishResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiError), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiError), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiError), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            try
+            {
+                var result = await _services.GetById(id);
+                return Ok(result);
+            }
+            catch(BusinessException e)
+            {
+                return BadRequest(new ApiError { Message = e.Message });
+            }
+            catch (NotFoundException e)
+            {
+                return NotFound(new ApiError { Message = e.Message });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return StatusCode(500, new { Message = "Error interno del servidor" });
+            }
+        }
+
         [HttpPost]
         [ProducesResponseType(typeof(DishResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiError), StatusCodes.Status400BadRequest)]
@@ -94,6 +121,33 @@ namespace MenuDigital.Controllers
             catch (ConflictException e)
             {
                 return Conflict(new ApiError { Message = e.Message });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return StatusCode(500, new { Message = "Error interno del servidor" });
+            }
+        }
+
+        [HttpOptions("{id}")]
+        [ProducesResponseType(typeof(DishResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiError), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiError), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiError), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            try
+            {
+                var result = await _services.Delete(id);
+                return Ok(result);
+            }
+            catch (BusinessException e)
+            {
+                return BadRequest(new ApiError { Message = e.Message });
+            }
+            catch (NotFoundException e)
+            {
+                return NotFound(new ApiError { Message = e.Message });
             }
             catch (Exception e)
             {
