@@ -8,6 +8,6 @@ namespace Aplication.Exceptions
 {
     public class ApiError
     {
-        public string Message { get; set; }
+        public string? Message { get; set; }
     }
 }
