@@ -32,7 +32,7 @@ namespace Infraestructure.Querys
 
         public Dish GetDishById(Guid id)
         {
-            return _context.Dish.FirstOrDefault(d => d.DishId == id);
+            return _context.Dish.Include(d => d.CategoryDb).FirstOrDefault(d => d.DishId == id);
         }
     }
 }

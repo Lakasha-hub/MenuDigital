@@ -13,5 +13,7 @@ namespace Aplication.Interfaces.Services
         Task<DishResponse> Create(DishRequest dish);
         Task<DishResponse> Update(Guid id, DishUpdateRequest req);
         Task<List<DishResponse>> GetAll(DishFilterRequest filter);
+        Task<DishResponse> GetById(Guid id);
+        Task<DishResponse> Delete(Guid id);
     }
 }

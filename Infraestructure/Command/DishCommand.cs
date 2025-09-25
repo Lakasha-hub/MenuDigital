@@ -29,5 +29,11 @@ namespace Infraestructure.Command
             _context.Update(dish);
             await _context.SaveChangesAsync();
         }
+
+        public async Task DeleteDish(Dish dish)
+        {
+            _context.Remove(dish);
+            await _context.SaveChangesAsync();
+        }
     }
 }

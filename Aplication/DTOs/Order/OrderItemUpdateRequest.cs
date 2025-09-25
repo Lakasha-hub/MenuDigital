@@ -10,7 +10,7 @@ namespace Aplication.DTOs.Order
     public class OrderItemUpdateRequest
     {
         [Required(ErrorMessage = "status es requerido")]
-        [Range(1, 5, ErrorMessage = "status no válido")]
+        [Range(1, 5, ErrorMessage = "El estado especificado no es válido")]
         public int Status { get; set; }
     }
 }

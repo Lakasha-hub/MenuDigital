@@ -129,7 +129,7 @@ namespace MenuDigital.Controllers
             }
         }
 
-        [HttpOptions("{id}")]
+        [HttpDelete("{id}")]
         [ProducesResponseType(typeof(DishResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiError), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiError), StatusCodes.Status404NotFound)]
@@ -143,7 +143,7 @@ namespace MenuDigital.Controllers
             }
             catch (BusinessException e)
             {
-                return BadRequest(new ApiError { Message = e.Message });
+                return Conflict(new ApiError { Message = e.Message });
             }
             catch (NotFoundException e)
             {

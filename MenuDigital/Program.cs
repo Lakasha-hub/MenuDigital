@@ -27,6 +27,7 @@ builder.Services.AddScoped<IDishService, DishService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IStatusService, StatusService>();
 builder.Services.AddScoped<IDeliveryTypeService, DeliveryTypeService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 // CQRS Injection
 builder.Services.AddScoped<IDishQuery, DishQuery>();
@@ -34,6 +35,8 @@ builder.Services.AddScoped<IDishCommand, DishCommand>();
 builder.Services.AddScoped<ICategoryQuery, CategoryQuery>();
 builder.Services.AddScoped<IStatusQuery, StatusQuery>();
 builder.Services.AddScoped<IDeliveryTypeQuery, DeliveryTypeQuery>();
+builder.Services.AddScoped<IOrderQuery, OrderQuery>();
+builder.Services.AddScoped<IOrderCommand, OrderCommand>();
 
 // Error Response Configuration
 builder.Services.Configure<ApiBehaviorOptions>(options =>

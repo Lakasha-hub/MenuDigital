@@ -22,12 +22,14 @@ namespace Aplication.Services
         private readonly IDishCommand _dishCommand;
         private readonly IDishQuery _dishQuery;
         private readonly ICategoryQuery _categoryQuery;
+        private readonly IOrderQuery _orderQuery;
 
-        public DishService(IDishCommand command, IDishQuery query, ICategoryQuery categoryQuery)
+        public DishService(IDishCommand command, IDishQuery query, ICategoryQuery categoryQuery, IOrderQuery orderQuery)
         {
             _dishCommand = command;
             _dishQuery = query;
             _categoryQuery = categoryQuery;
+            _orderQuery = orderQuery;
         }
 
         public async Task<List<DishResponse>> GetAll(DishFilterRequest filter)
@@ -74,6 +76,33 @@ namespace Aplication.Services
             });
 
             return result.ToList();
+        }
+
+        public async Task<DishResponse> GetById(Guid id)
+        {
+            var dish = _dishQuery.GetDishById(id);
+            if (dish == null)
+            {
+                throw new NotFoundException("Plato no encontrado");
+            }
+
+            var result = new DishResponse
+            {
+                Id = dish.DishId.ToString(),
+                Name = dish.Name,
+                Description = dish.Description,
+                Price = (double)dish.Price,
+                IsActive = dish.Available,
+                Image = dish.ImageUrl,
+                Category = new GenericResponse
+                {
+                    Id = dish.CategoryDb.Id,
+                    Name = dish.CategoryDb.Name
+                },
+                CreatedAt = dish.CreateDate,
+                UpdatedAt = dish.UpdateDate,
+            };
+            return result;
         }
 
         public async Task<DishResponse> Create(DishRequest req)
@@ -193,6 +222,37 @@ namespace Aplication.Services
                 UpdatedAt = query.UpdateDate,
             };
             return result;
+        }
+
+        public async Task<DishResponse> Delete(Guid id)
+        {
+            var dish = _dishQuery.GetDishById(id);
+            if (dish == null)
+            {
+                throw new NotFoundException("Plato no encontrado");
+            }
+
+            var dishInOrder = await _orderQuery.IsDishInOrderActive(id);
+            if (dishInOrder)
+                throw new BusinessException("No se puede eliminar el plato porque está incluido en órdenes activas");
+
+            await _dishCommand.DeleteDish(dish);
+            return new DishResponse
+            {
+                Id = dish.DishId.ToString(),
+                Name = dish.Name,
+                Description = dish.Description,
+                Price = (double)dish.Price,
+                IsActive = false,
+                Image = dish.ImageUrl,
+                Category = new GenericResponse
+                {
+                    Id = dish.CategoryDb.Id,
+                    Name = dish.CategoryDb.Name
+                },
+                CreatedAt = dish.CreateDate,
+                UpdatedAt = dish.UpdateDate,
+            };
         }
     }
 }
