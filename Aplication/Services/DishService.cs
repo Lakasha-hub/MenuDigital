@@ -34,29 +34,7 @@ namespace Aplication.Services
 
         public async Task<List<DishResponse>> GetAll(DishFilterRequest filter)
         {
-            var dishes = await _dishQuery.GetAllDishes();
-
-            if (!string.IsNullOrWhiteSpace(filter.Name))
-            {
-                dishes = dishes.Where(d => d.Name.ToLower().Contains(filter.Name.Trim().ToLower()));
-            }
-
-            if (filter.Category.HasValue)
-            {
-                dishes = dishes.Where(d => d.Category == filter.Category);
-            }
-
-            if(filter.OnlyActive != false)
-            {
-                dishes = dishes.Where(d => d.Available);
-            }
-
-            dishes = filter.SortByPrice?.ToLower() switch
-            {
-                "asc" => dishes.OrderBy(d => d.Price),
-                "desc" => dishes.OrderByDescending(d => d.Price),
-                _ => dishes
-            };
+            var dishes = await _dishQuery.GetAllDishes(filter);
 
             var result = dishes.Select(d => new DishResponse
             {
@@ -74,7 +52,6 @@ namespace Aplication.Services
                 CreatedAt = d.CreateDate,
                 UpdatedAt = d.UpdateDate,
             });
-
             return result.ToList();
         }
 
@@ -109,31 +86,24 @@ namespace Aplication.Services
         {
             Dish dishExists = _dishQuery.GetDishByName(req.Name);
             if (dishExists != null)
-            {
                 throw new ConflictException("Ya existe un plato con ese nombre");
-            }
 
             Category categoryExists = _categoryQuery.GetCategoryById(req.Category);
             if (categoryExists == null)
-            {
                 throw new NotFoundException("La categoría no existe");
-            }
 
             if(req.Price <= 0)
-            {
                 throw new BusinessException("El precio debe ser mayor a cero");
-            }
 
             if(!string.IsNullOrEmpty(req.Image) && !Uri.IsWellFormedUriString(req.Image, UriKind.Absolute))
-            {
                 throw new BusinessException("La url no es válida");
-            }
 
             var newDish = new Dish
             {
                 Name = req.Name.Trim(),
                 Description = req.Description != null ? req.Description.Trim() : "",
                 Price = (decimal)req.Price,
+                Available = true,
                 ImageUrl = req.Image != null ? req.Image.Trim() : "",
                 Category = req.Category,
                 CreateDate = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
@@ -186,7 +156,7 @@ namespace Aplication.Services
             Category categoryExists = _categoryQuery.GetCategoryById(req.Category);
             if (categoryExists == null)
             {
-                throw new NotFoundException("La categoría no existe");
+                throw new BusinessException("La categoría no existe");
             }
 
             if (!string.IsNullOrEmpty(req.Image) && !Uri.IsWellFormedUriString(req.Image, UriKind.Absolute))
@@ -228,9 +198,7 @@ namespace Aplication.Services
         {
             var dish = _dishQuery.GetDishById(id);
             if (dish == null)
-            {
                 throw new NotFoundException("Plato no encontrado");
-            }
 
             var dishInOrder = await _orderQuery.IsDishInOrderActive(id);
             if (dishInOrder)

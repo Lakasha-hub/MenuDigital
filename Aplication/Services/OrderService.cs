@@ -73,28 +73,10 @@ namespace Aplication.Services
 
         public async Task<List<OrderDetailsResponse>> GetAll(OrderFilterRequest filter)
         {
-            var orders = await _query.GetAllOrders();
-
             if (filter.From.HasValue && filter.To.HasValue && filter.From > filter.To)
-            {
                 throw new BusinessException("Rango de fechas inválido");
-            }
 
-            if (filter.From.HasValue)
-            {
-                orders = orders.Where(o => o.CreateDate >= filter.From.Value);
-            }
-
-            if (filter.To.HasValue)
-            {
-                orders = orders.Where(o => o.CreateDate <= filter.To.Value);
-            }
-
-            if (filter.Status.HasValue)
-            {
-                orders = orders.Where(o => o.OverallStatus == filter.Status);
-            }
-
+            var orders = await _query.GetAllOrders(filter);
             var result = orders.Select(o => new OrderDetailsResponse
             {
                 OrderNumber = Convert.ToInt32(o.OrderId),
@@ -130,9 +112,9 @@ namespace Aplication.Services
                 }).ToList(),
                 CreatedAt = o.CreateDate.ToLocalTime(),
                 UpdatedAt = o.UpdateDate.ToLocalTime()
-            }).OrderByDescending(o => o.CreatedAt).ToList();
+            }).OrderByDescending(o => o.CreatedAt);
 
-            return result;
+            return result.ToList();
         }
 
         public async Task<OrderUpdateResponse> Update(int id, OrderUpdateRequest req)
