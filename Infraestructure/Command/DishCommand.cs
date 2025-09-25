@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Aplication.Interfaces.Command;
 using Domain.Entities;
 using Infraestructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infraestructure.Command
 {
@@ -30,10 +31,10 @@ namespace Infraestructure.Command
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteDish(Dish dish)
+        public async Task DeleteDish(Guid dishId)
         {
-            _context.Remove(dish);
-            await _context.SaveChangesAsync();
+            await _context.Dish.Where(d => d.DishId == dishId)
+                .ExecuteUpdateAsync(s => s.SetProperty(d => d.Available, false));
         }
     }
 }

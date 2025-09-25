@@ -13,5 +13,6 @@ namespace Aplication.Interfaces.Command
         Task InsertOrder(Order order);
         Task UpdateOrder(Order order);
         Task UpdateOrderItem(UpdateOrderItemParams newParams);
+        Task RecalculateOrderStatus(int orderId);
     }
 }

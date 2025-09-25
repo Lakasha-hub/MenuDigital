@@ -211,7 +211,6 @@ namespace Aplication.Services
             };
             return result;
         }
-
         public async Task<OrderUpdateResponse> UpdateItem(int orderId, int itemId , OrderItemUpdateRequest details)
         {
             var order = _query.GetOrderById(orderId);
@@ -229,6 +228,7 @@ namespace Aplication.Services
                 Status = details.Status,
             });
 
+            await _command.RecalculateOrderStatus(orderId);
             return new OrderUpdateResponse
             {
                 OrderNumber = Convert.ToInt32(order.OrderId),

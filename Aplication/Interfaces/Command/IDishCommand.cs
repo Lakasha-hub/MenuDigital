@@ -11,6 +11,6 @@ namespace Aplication.Interfaces.Command
     {
         Task InsertDish(Dish dish);
         Task UpdateDish(Dish dish);
-        Task DeleteDish(Dish dish);
+        Task DeleteDish(Guid dishId);
     }
 }

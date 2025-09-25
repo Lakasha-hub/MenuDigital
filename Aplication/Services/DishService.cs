@@ -204,7 +204,7 @@ namespace Aplication.Services
             if (dishInOrder)
                 throw new BusinessException("No se puede eliminar el plato porque está incluido en órdenes activas");
 
-            await _dishCommand.DeleteDish(dish);
+            await _dishCommand.DeleteDish(id);
             return new DishResponse
             {
                 Id = dish.DishId.ToString(),

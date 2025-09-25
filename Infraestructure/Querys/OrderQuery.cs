@@ -57,7 +57,7 @@ namespace Infraestructure.Querys
         public async Task<bool> IsDishInOrderActive(Guid dishId)
         {
             return await _context.OrderItem
-                .AnyAsync(oi => oi.Dish == dishId && (oi.Status == 1 || oi.Status == 2));
+                .AnyAsync(oi => oi.Dish == dishId);
         }
     }
 }
